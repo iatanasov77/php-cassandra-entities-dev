@@ -1,0 +1,13 @@
+{
+    "name": "vanko-soft/cassandra-dev",
+    "authors": [
+        {
+            "name": "Ivan I. Atanasov",
+            "email": "i.atanasov77@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+	"vanko-soft/cassandra-odm": "dev-develop"
+    }
+}

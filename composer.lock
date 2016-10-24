@@ -1,0 +1,49 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "This file is @generated automatically"
+    ],
+    "hash": "1c2a46c4f2c48b6aad9902b59cd2983f",
+    "content-hash": "8f1803c91a437f7c120471b24dd9758d",
+    "packages": [
+        {
+            "name": "vanko-soft/cassandra-odm",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/iatanasov77/php-cassandra-entities.git",
+                "reference": "969dafc902eb37e836d67b16c99c0312dab04637"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/iatanasov77/php-cassandra-entities/zipball/969dafc902eb37e836d67b16c99c0312dab04637",
+                "reference": "969dafc902eb37e836d67b16c99c0312dab04637",
+                "shasum": ""
+            },
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Ivan I. Atanasov",
+                    "email": "i.atanasov77@gmail.com"
+                }
+            ],
+            "description": "A Cassandra ODM. An ORM-like library for the apache cassandra database.",
+            "time": "2016-10-16 12:43:13"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "dev",
+    "stability-flags": {
+        "vanko-soft/cassandra-odm": 20
+    },
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": [],
+    "platform-dev": []
+}

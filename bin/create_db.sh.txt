@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+#cqlsh -u "user_name" -p "password" -f /vagrant/config/db/structure.cql
+
+cqlsh -f /vagrant/config/db/structure.cql
+cqlsh -f /vagrant/config/db/data.cql
