@@ -2,20 +2,17 @@
 
 namespace VankoSoft\Cassandra\DBAL\Driver\DataStax;
 
-use VankoSoft\Cassandra\DBAL\Driver\DriverConfig;
+use VankoSoft\Cassandra\DBAL\AdapterConfigInterface;
 
 class Driver
-{
-	private $session;
-	
-	public function connect( DriverConfig $config )
+{	
+	public static function connect( AdapterConfigInterface $config )
 	{
 		$cluster		= \Cassandra::cluster()
 							->withContactPoints( join( ',', $config->getContactPoints() ) )
 							->withPort( $config->getPort() )
 							->build();
 		
-		$this->session	= $cluster->connect( $config->getKeyspace() );
+		return $cluster->connect( $config->getKeyspace() );
 	}
-	
 }
