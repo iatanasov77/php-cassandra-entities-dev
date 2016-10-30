@@ -20,9 +20,3 @@ wget https://raw.github.com/iatanasov77/php-dev-tools/master/bumpversion.php
 chmod +x bumpversion.php
 sudo mv bumpversion.php /usr/local/bin/bumpversion
 
-# Install and start DataStax Cassandra
-sudo yum -y install java
-sudo cat /vagrant/Vagrant/etc/yum.repos.d/datastax.repo > /etc/yum.repos.d/datastax.repo
-sudo yum -y install dsc20
-sudo systemctl enable cassandra
-sudo systemctl start cassandra

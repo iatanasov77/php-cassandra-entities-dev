@@ -21,11 +21,13 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   
   # Run provision scripts
   config.vm.provision "shell", path: "Vagrant/provision/packages.sh"
+  config.vm.provision "shell", path: "Vagrant/provision/settings.sh"
   config.vm.provision "shell", path: "Vagrant/provision/httpd_config.sh"
-  
+  config.vm.provision "shell", path: "Vagrant/provision/cassandra.sh"
+ 
   # Running Chefs
   config.vm.provision "chef_solo" do |chef|
-    chef.cookbooks_path = "Vagrant/cookbooks"
-	chef.add_recipe "virtual_hosts"
+    #chef.cookbooks_path = "Vagrant/cookbooks"
+	#chef.add_recipe "virtual_hosts"
   end
 end
