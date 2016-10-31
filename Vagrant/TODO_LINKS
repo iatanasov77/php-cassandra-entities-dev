@@ -1,0 +1,19 @@
+http://blog.servergrove.com/2013/01/11/creating-development-environments-with-vagrant-and-puppet/
+
+
+#This file is generated with Vankata VirtualHost Creator
+
+<VirtualHost *:80>
+    ServerAdmin iatanasov@icygen.com
+    ServerName www.pcedev.dev
+    ServerAlias pcedev.dev
+    DocumentRoot /vagrant/webroot
+
+    CustomLog /var/log/httpd/pcedev.dev-access.log combined
+    ErrorLog /var/log/httpd/pcedev.dev-error.log
+
+    <Directory /vagrant/webroot>
+        Require all granted
+    </Directory>
+
+</VirtualHost>

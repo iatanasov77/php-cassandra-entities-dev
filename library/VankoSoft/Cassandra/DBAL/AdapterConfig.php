@@ -25,7 +25,7 @@ class AdapterConfig implements AdapterConfigInterface
 	
 	public function contactPoints()
 	{
-		return $this->config['contactPoints'];
+		return $this->config['contact_points'];
 	}
 	
 	public function username()

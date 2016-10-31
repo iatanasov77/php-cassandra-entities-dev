@@ -23,8 +23,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.provision "shell", path: "Vagrant/provision/packages.sh"
   config.vm.provision "shell", path: "Vagrant/provision/settings.sh"
   config.vm.provision "shell", path: "Vagrant/provision/httpd_config.sh"
-  #config.vm.provision "shell", path: "Vagrant/provision/cassandra.sh"
-  config.vm.provision "shell", path: "Vagrant/provision/cassandra_2way.sh"
+  config.vm.provision "shell", path: "Vagrant/provision/cassandra.sh"
  
   # Running Chefs
   config.vm.provision "chef_solo" do |chef|
