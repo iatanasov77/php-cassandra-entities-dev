@@ -4,4 +4,6 @@
 /.buildpath
 /.project
 /composer.lock
+/.vagrant/
+/webroot/cassandra.log
 

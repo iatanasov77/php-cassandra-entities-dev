@@ -1,5 +1,6 @@
 DROP KEYSPACE IF EXISTS vs_dev;
-CREATE KEYSPACE vs_dev;
+CREATE KEYSPACE vs_dev WITH REPLICATION = { 'class' : 'SimpleStrategy', 'replication_factor' : 3 };
+USE vs_dev;
 
 CREATE TABLE products (
   product_id	int,

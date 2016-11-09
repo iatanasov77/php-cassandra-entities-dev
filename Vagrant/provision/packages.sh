@@ -10,9 +10,9 @@ echo "Provsioning guest with custom packages..."
 sudo yum -y install mc gitflow redhat-lsb-core
 
 # Install VankoSoft PhpDevTools - mkvhost
-wget https://raw.github.com/iatanasov77/php-dev-tools/develop/mkvhost.php
-chmod +x mkvhost.php
-sudo mv mkvhost.php /usr/local/bin/mkvhost
+wget http://vankosoft.babymarket.bg/download/MkVhost.phar
+chmod +x MkVhost.phar
+sudo mv MkVhost.phar /usr/local/bin/mkvhost
 
 # Install VankoSoft PhpDevTools - bumpversion
 wget https://raw.github.com/iatanasov77/php-dev-tools/develop/bumpversion.php
