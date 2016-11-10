@@ -2,7 +2,7 @@
 
 namespace VankoSoft\Cassandra\ODM;
 
-use Enigma\Library\Database\Cassandra\Adapter\Adapter as DbAdapter;
+use VankoSoft\Cassandra\DBAL\Driver\DataStax\Adapter as DbAdapter;
 use Enigma\Library\Config\ConfigLoaderInterface;
 
 use Cyclonis\Api\V1\Module\Main\Service\Security\User\User;
@@ -12,7 +12,7 @@ use VankoSoft\Cassandra\ODM\Entity\BaseEntity;
  * @brief	EntityManager Service.
  * @details	This service play a role of a Repository Factory.
  */
-class EntityManager implements EntityManagerInterface, EntityHydratorInterface
+class EntityManager implements EntityManagerInterface
 {	
 	/**
 	 * @var \Enigma\Library\Database\Cassandra\Adapter\Adapter $dbAdapter
@@ -20,7 +20,6 @@ class EntityManager implements EntityManagerInterface, EntityHydratorInterface
 	protected $dbAdapter;
 	
 	/**
-	 *
 	 * @var \VankoSoft\Cassandra\ODM\EntityMetaDataConfig $entityMetaDataConfig
 	 */
 	protected $entityMetaDataConfig;
@@ -90,92 +89,32 @@ class EntityManager implements EntityManagerInterface, EntityHydratorInterface
 	/**
 	 * @copydoc	\VankoSoft\Cassandra\ODM\EntityManagerInterface::getRepository()
 	 */
-	public function getRepository( $entityType )
+	public function getRepository( $alias )
 	{
 		// Repositories lazy Loading. If repository is not loaded , try to load it.
-		if ( ! isset( $this->repositories[$entityType] ) )
+		if ( ! isset( $this->repositories[$alias] ) )
 		{
-			if ( ! is_subclass_of( $entityType, '\VankoSoft\Cassandra\ODM\Entity\BaseEntity' ) )
+			$entityBase		= '\VankoSoft\Cassandra\ODM\Entity\BaseEntity';
+			$repositoryBase	= '\VankoSoft\Cassandra\ODM\EntityRepositoryInterface';
+			
+			extract( $this->entityMetaDataConfig->getRepositoryConfig( $alias ) );
+			
+			switch ( true )
 			{
-				throw new OrmException( 'Wrong entity type!' );
+				case ! isset( $dbTable ) || ! isset( $repository ) || ! isset( $entity ):
+					throw new OrmException( 'Invalid repository config!' );
+				case ! class_exists( $entity ) || ! is_subclass_of( $entity, $entityBase ):
+					throw new OrmException( 'Invalid entity type!' );
+				case ! class_exists( $repository ) || ! is_subclass_of( $repository, $repositoryBase ):
+					throw new OrmException( 'Invalid repository type!' );
 			}
-
-			$repositoryType	= $this->entityMetaDataConfig->getRepositoryType( $entityType );
-			if ( ! is_subclass_of( $repositoryType, '\VankoSoft\Cassandra\ODM\EntityRepositoryInterface' ) )
-			{
-				throw new OrmException( 'Wrong repository type into entity meta data!' );
-			}
-
-			$this->repositories[$entityType]	= new $repositoryType( $entityType, $this );
+			
+			$tableGateway	= new TableGateway( $this->dbAdapter );
+			$hydrator		= new Hydrator( $metaConfig );
+			
+			$this->repositories[$alias]	= new $repository( $entity, $tableGateway, $hydrator );
 		}
 		
-		return $this->repositories[$entityType];
-	}
-	
-	/**
-	 * @copydoc	\VankoSoft\Cassandra\ODM\EntityHydratorInterface::fetchEntities()
-	 */
-	public function fetchEntities( array $resultSet, $entityType )
-	{
-		return $this->entityHydrator->fetchEntities( $resultSet, $entityType );
-	}
-	
-	/**
-	 * @copydoc	\VankoSoft\Cassandra\ODM\EntityHydratorInterface::populateEntity()
-	 */
-	public function populateEntity( BaseEntity $entity, array $data )
-	{
-		return $this->entityHydrator->populateEntity( $entity, $data );
-	}
-	
-	/**
-	 * @copydoc	\VankoSoft\Cassandra\ODM\EntityHydratorInterface::extractEntity()
-	 */
-	public function extractEntity( BaseEntity $entity, $dbTable = null )
-	{
-		return $this->entityHydrator->extractEntity( $entity, $dbTable );
-	}
-	
-	/**
-	 * @copydoc	\VankoSoft\Cassandra\ODM\EntityHydratorInterface::extractPrimaryKeys()
-	 */
-	public function extractPrimaryKeys( BaseEntity $entity )
-	{
-		return $this->entityHydrator->extractPrimaryKeys( $entity );
-	}
-	
-	/**
-	 * @copydoc	\VankoSoft\Cassandra\ODM\EntityHydratorInterface::prepareParams()
-	 */
-	public function prepareParams( $entityType, array $params )
-	{
-		return $this->entityHydrator->prepareParams( $entityType, $params );
-	}
-	
-	/**
-	 * @brief	Populate an entity from query results.
-	 * 
-	 * @details	A fake method that execute one or more queries passed to it,
-	 *			merge first rows of results of all queries and 
-	 *			try to populate entity with resulting data.
-	 * 
-	 * @params	\VankoSoft\Cassandra\ODM\BaseEntity $entity
-	 * @params	array $queries
-	 * 
-	 * @return \VankoSoft\Cassandra\ODM\BaseEntity Populated entity
-	 */
-	public function populateEntityFromQueries( BaseEntity $entity, array $queries )
-	{
-		$data	= array();
-		foreach ( $queries as $query => $params )
-		{
-			$result	= $this->dbAdapter->query( $query,	$params );
-			if ( $result->count() > 0 )
-			{
-				$data	= array_merge( $data, $result->toArray()[0] );
-			}
-		}
-		
-		return $this->entityHydrator->populateEntity( $entity, $data );
+		return $this->repositories[$alias];
 	}
 }

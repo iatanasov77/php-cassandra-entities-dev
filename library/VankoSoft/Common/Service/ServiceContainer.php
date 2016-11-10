@@ -61,7 +61,7 @@ class ServiceContainer
 		}
 		else if ( isset( $serviceConfig['class'] ) )
 		{
-			return new $serviceConfig['class']( $params );
+			return new $serviceConfig['class']( ...array_values( $params ) );
 		}
 		
 		throw new ServiceContainerException( sprintf( 'Cannot create service by alias: "%s"', $alias ) );

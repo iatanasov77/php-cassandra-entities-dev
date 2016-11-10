@@ -21,13 +21,13 @@ class Kernel
 	
 	public function __construct( $rootPath )
 	{
-		$this->rootPath			= $rootPath;
+		$this->rootPath			= $rootPath . DIRECTORY_SEPARATOR;
 		
-		$this->configPath		= $this->rootPath . DIRECTORY_SEPARATOR . 'config';
+		$this->configPath		= $this->rootPath . 'config' . DIRECTORY_SEPARATOR;
 		
-		$this->appPath			= $this->rootPath . DIRECTORY_SEPARATOR . 'src';
+		$this->appPath			= $this->rootPath . 'src' . DIRECTORY_SEPARATOR;
 		
-		$this->publicPath		= $this->rootPath . DIRECTORY_SEPARATOR . 'webroot';
+		$this->publicPath		= $this->rootPath . 'webroot' . DIRECTORY_SEPARATOR;
 		
 		$this->config			= new ConfigLoader( $this->configPath );
 		

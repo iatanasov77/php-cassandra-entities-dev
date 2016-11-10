@@ -12,7 +12,9 @@
     
     "require": {
     	"php": ">=5.5",
-    	"hassankhan/config": "~0.10"
+    	"hassankhan/config": "~0.10",
+        "silex/silex": "~2.0",
+        "gecko-packages/gecko-silex-config-service": "dev-master"
     },
     
     "autoload":
