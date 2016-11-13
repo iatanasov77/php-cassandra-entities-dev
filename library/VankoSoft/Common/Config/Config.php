@@ -2,7 +2,7 @@
 
 namespace VankoSoft\Common\Config;
 
-class Config implements ConfigInterface
+class Config implements ConfigInterface, ArrayCastAwareInterface
 {
 	protected $config;
 	

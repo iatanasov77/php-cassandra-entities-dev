@@ -4,13 +4,22 @@ ini_set('display_errors', 1);
 
 require_once  __DIR__ . '/../vendor/autoload.php';
 
-use Noodlehaus\Config;
-
 use VankoSoft\Common\Application\Kernel;
+use VankoSoft\Alexandra\CONF\Config;
+use VankoSoft\Alexandra\DBAL\AdapterFactory;
 
 $kernel = new Kernel( dirname( dirname( __FILE__ ) ) );
 
-//var_dump( Config::load( $kernel->getConfigPath() . 'cassandra_entities.php')); die;
+$config	= new Config( $kernel->getConfigPath() );
+$db		= AdapterFactory::create( $config->get( 'cassandra.adapter' ) );
+
+
+//echo "<pre>"; var_dump( $db->schema() ); die;
+$db->query( "INSERT INTO products ( product_id, title, qty, price, categories ) VALUES ( 1, 'product1', 30, 10, { 1,3 } )" );
+$db->query( "INSERT INTO products ( product_id, title, qty, price, categories ) VALUES ( 2, 'product2', 12, 10, { 1,3 } )" );
+$db->query( "INSERT INTO products ( product_id, title, qty, price, categories ) VALUES ( 3, 'product3', 32, 10, { 1,3 } )" );
+$db->query( "INSERT INTO products ( product_id, title, qty, price, categories ) VALUES ( 4, 'product4', 45, 10, { 1,3 } )" );
+echo "<pre>"; var_dump( $db->query( 'select * from products' ) ); die;
 
 
 $blogRepo = $kernel	->getServiceContainer()

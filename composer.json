@@ -23,7 +23,7 @@
     	{
     		"VankoSoft\\Common\\": 		"library/VankoSoft/Common/",
     		"VankoSoft\\LibraryDev\\":	"library/VankoSoft/LibraryDev/",
-    		"VankoSoft\\Cassandra\\":	"library/VankoSoft/Cassandra/"
+    		"VankoSoft\\Alexandra\\":	"library/VankoSoft/Alexandra/"
     	}
     }
 }

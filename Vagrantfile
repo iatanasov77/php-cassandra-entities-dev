@@ -9,7 +9,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   # Virtual Box Configuration
   config.vm.provider "virtualbox" do |v|
-    v.name = "Vanko Soft Projects"
+    v.name = "PhpCassandraEntitiesDev"
     v.customize ["modifyvm", :id, "--memory", "1024"]
   end
   
