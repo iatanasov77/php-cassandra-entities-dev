@@ -1,8 +1,8 @@
 <?php
 
-namespace VankoSoft\Alexandra\DBAL\Driver\DataStax;
+namespace VankoSoft\Alexandra\DBAL\Adapter\DataStax;
 
-use VankoSoft\Alexandra\DBAL\AdapterConfigInterface;
+use VankoSoft\Alexandra\DBAL\Adapter\AdapterConfigInterface;
 
 class Driver
 {	

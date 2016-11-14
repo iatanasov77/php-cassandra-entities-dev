@@ -6,7 +6,7 @@ require_once  __DIR__ . '/../vendor/autoload.php';
 
 use VankoSoft\Common\Application\Kernel;
 use VankoSoft\Alexandra\CONF\Config;
-use VankoSoft\Alexandra\DBAL\AdapterFactory;
+use VankoSoft\Alexandra\DBAL\Adapter\AdapterFactory;
 
 $kernel = new Kernel( dirname( dirname( __FILE__ ) ) );
 
@@ -19,8 +19,15 @@ $db->query( "INSERT INTO products ( product_id, title, qty, price, categories ) 
 $db->query( "INSERT INTO products ( product_id, title, qty, price, categories ) VALUES ( 2, 'product2', 12, 10, { 1,3 } )" );
 $db->query( "INSERT INTO products ( product_id, title, qty, price, categories ) VALUES ( 3, 'product3', 32, 10, { 1,3 } )" );
 $db->query( "INSERT INTO products ( product_id, title, qty, price, categories ) VALUES ( 4, 'product4', 45, 10, { 1,3 } )" );
-echo "<pre>"; var_dump( $db->query( 'select * from products' ) ); die;
 
+// Test Adapter
+//echo "<pre>"; var_dump( $db->query( 'select * from products' ) ); die;
+
+// Test Hydrator
+$hydrator	= new DataStaxEntityHydrator();
+$product	= new Product();
+$result		= $db->query( 'select * from products' );
+echo "<pre>"; var_dump( $hydrator->hydrate( $product, $result ) ); die;
 
 $blogRepo = $kernel	->getServiceContainer()
 					->get( 'entity_manager' )

@@ -4,7 +4,7 @@ return array(
 	'services'	=> array(
 
 		'cassandra_adapter'	=> array(
-			'factory'		=> '\VankoSoft\Cassandra\DBAL\AdapterFactory',
+			'factory'		=> '\VankoSoft\Cassandra\DBAL\Adapter\AdapterFactory',
 			'params'		=> array( 'config' => '%cassandra.adapter' )
 		),
 		
