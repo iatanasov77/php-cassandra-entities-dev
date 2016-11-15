@@ -1,6 +1,6 @@
 <?php
 
-namespace AlexandraDev\Model\Entity;
+namespace VankoSoft\AlexandraDev\Model\Entity;
 
 use VankoSoft\Alexandra\ODM\Entity\BaseEntity;
 

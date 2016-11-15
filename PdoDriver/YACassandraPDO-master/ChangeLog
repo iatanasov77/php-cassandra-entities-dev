@@ -1,0 +1,82 @@
+0.6.0
+ * Compatibility with cassandra 2.0.x
+
+0.5.2
+ * prepared statement consistency does not change handle consistency
+ * add unit test for bind collection
+
+0.5.1
+- fix bindValue for collections
+
+0.5.0
+- Changed values binding system
+- Fixed some potential cql injection
+
+0.4.4
+- Fixed UUID test
+
+0.4.3
+- Added support for the decimal type
+- BugFix on collections, keys were truncated to 4 bytes
+
+0.4.2
+- BugFix Strings were not null terminated and needed to be
+
+0.4.1
+- Creation of the packaging system for debian
+
+0.4.0
+- Fix Integer conversions errors
+- Adding escaping primitives
+- Support of the binding feature for most of the types
+
+0.3.1
+- Add support to cassandra 1.2.2 with 19.36 thrift interace
+
+0.3.0
+- Swittched to Cassandra 19.35 thrift interface
+- Added support to cql3 (via execute_cql3), compatible with Cassandra 1.2
+- fixed support to negative integers
+- fixed unit tests, compatible with cassandra 1.2
+- removed cqlversion from dsn (force it to cql3)
+
+
+0.2.2
+- Switched to Cassandra 1.1.1 thrift interface
+- dbname in dsn sets the keyspace at startup
+- cqlversion in dsn sets the cql version at startup
+- Fixed Authentication for SimpleAuthority/SimpleAuthenticator
+
+0.2.1
+- Removed rowset iterators
+
+0.2.0
+- Switched to Cassandra 1.x branch and dropped support for 0.8.x.
+- Fixed tests to new Cassandra types
+- Use the new schema information returned with CqlResults
+
+0.1.4
+- Updated handling for arbitrary size integers that overflow platform long.
+  Integer overflow now causes error 22003
+- Fixed thread-safe build
+- Added new option PDO::CASSANDRA_ATTR_PRESERVE_VALUES
+- Fixed error in handling sparse columns when statement is executed
+  multiple times
+
+0.1.3
+- Sparse columns are now handled as an union
+- Added support for counters
+- Added more tests and included tests in package.xml
+- Added option to preserve original column values
+- Added the original column key to metadata
+
+0.1.2
+- Added proper support for numeric types
+- Added support for sparse columns
+- Added more tests
+
+0.1.1
+- Fix issue where row count was used instead column count
+
+0.1.0
+- Initial release

@@ -2,7 +2,7 @@
 
 namespace VankoSoft\Alexandra\ODM\Entity;
 
-use VankoSoft\Alexandra\ODM\OrmException;
+use VankoSoft\Alexandra\ODM\Exception\OdmException;
 
 /**
  * @brief	Root class for all ORM Entities.
@@ -27,7 +27,7 @@ class BaseEntity
 	{
 		if ( ! property_exists( $this, $property ) )
 		{
-			throw new OrmException( sprintf( 'Property does not exists: ( %s::%s )', get_class( $this ), $property ) );
+			throw new OdmException( sprintf( 'Property does not exists: ( %s::%s )', get_class( $this ), $property ) );
 		}
 
 		return $this->$property;
@@ -45,7 +45,7 @@ class BaseEntity
 	{
 		if ( ! property_exists( $this, $property ) )
 		{
-			throw new OrmException( sprintf( 'Property does not exists: ( %s::%s )', get_class( $this ), $property ) );
+			throw new OdmException( sprintf( 'Property does not exists: ( %s::%s )', get_class( $this ), $property ) );
 		}
 		
 		$this->$property = $value;

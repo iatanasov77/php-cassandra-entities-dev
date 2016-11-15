@@ -6,28 +6,44 @@ require_once  __DIR__ . '/../vendor/autoload.php';
 
 use VankoSoft\Common\Application\Kernel;
 use VankoSoft\Alexandra\CONF\Config;
-use VankoSoft\Alexandra\DBAL\Adapter\AdapterFactory;
+use VankoSoft\Alexandra\DBAL\Connection\Connection;
+use VankoSoft\Alexandra\ODM\Hydrator\DataStax\EntityHydrator as DataStaxEntityHydrator;
+use \VankoSoft\AlexandraDev\Model\Entity\Product;
 
-$kernel = new Kernel( dirname( dirname( __FILE__ ) ) );
+$kernel 	= new Kernel( dirname( dirname( __FILE__ ) ) );
 
-$config	= new Config( $kernel->getConfigPath() );
-$db		= AdapterFactory::create( $config->get( 'cassandra.adapter' ) );
+$config		= new Config( $kernel->getConfigPath() . 'vankosoft/alexandra/connection.php' );
 
+// Instatiate connection factory and get default connection
+$connection	= new Connection( $config->get( 'connection' ) );
+$connection->setDefaultConnection( 'evseevnn' );
+
+$db			= $connection->get();
 
 //echo "<pre>"; var_dump( $db->schema() ); die;
-$db->query( "INSERT INTO products ( product_id, title, qty, price, categories ) VALUES ( 1, 'product1', 30, 10, { 1,3 } )" );
-$db->query( "INSERT INTO products ( product_id, title, qty, price, categories ) VALUES ( 2, 'product2', 12, 10, { 1,3 } )" );
-$db->query( "INSERT INTO products ( product_id, title, qty, price, categories ) VALUES ( 3, 'product3', 32, 10, { 1,3 } )" );
-$db->query( "INSERT INTO products ( product_id, title, qty, price, categories ) VALUES ( 4, 'product4', 45, 10, { 1,3 } )" );
+$cql	= 'INSERT INTO products ( product_id, title, qty, price, categories ) VALUES ( :product_id, :title, :qty, :price, :categories )';
+$db->query( $cql, array( 1, 'product1', 30, 10, array( 1,3 ) ) );
+$db->query( $cql, array( 2, 'product2', 12, 10, array( 1,3 ) ) );
+$db->query( $cql, array( 3, 'product3', 32, 10, array( 1,3 ) ) );
+$db->query( $cql, array( 4, 'product4', 45, 10, array( 1,3 ) ) );
 
 // Test Adapter
 //echo "<pre>"; var_dump( $db->query( 'select * from products' ) ); die;
 
 // Test Hydrator
 $hydrator	= new DataStaxEntityHydrator();
-$product	= new Product();
+
 $result		= $db->query( 'select * from products' );
-echo "<pre>"; var_dump( $hydrator->hydrate( $product, $result ) ); die;
+
+$products	= array();
+foreach ( $result as $row )
+{
+	$product	= new Product();
+	$hydrator->hydrate( $product, $row );
+	$products[]	= $product;
+}
+
+echo "<pre>"; var_dump( $products ); die;
 
 $blogRepo = $kernel	->getServiceContainer()
 					->get( 'entity_manager' )

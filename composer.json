@@ -11,10 +11,9 @@
     "minimum-stability": "dev",
     
     "require": {
-    	"php": ">=5.5",
-    	"hassankhan/config": "~0.10",
-        "silex/silex": "~2.0",
-        "gecko-packages/gecko-silex-config-service": "dev-master"
+		"php": ">=5.5",
+		"hassankhan/config": "~0.10",
+		"evseevnn/php-cassandra-binary": "dev-master"
     },
     
     "autoload":
@@ -23,7 +22,8 @@
     	{
     		"VankoSoft\\Common\\": 		"library/VankoSoft/Common/",
     		"VankoSoft\\LibraryDev\\":	"library/VankoSoft/LibraryDev/",
-    		"VankoSoft\\Alexandra\\":	"library/VankoSoft/Alexandra/"
+    		"VankoSoft\\Alexandra\\":	"library/VankoSoft/Alexandra/",
+    		"VankoSoft\\AlexandraDev\\": "src/AlexandraDev/"
     	}
     }
 }
