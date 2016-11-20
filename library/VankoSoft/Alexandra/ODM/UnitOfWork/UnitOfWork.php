@@ -1,6 +1,6 @@
 <?php
 
-namespace VankoSoft\Alexandra\ODM\Repository;
+namespace VankoSoft\Alexandra\ODM\UnitOfWork;
 
 class UnitOfWork implements UnitOfWorkInterface
 {

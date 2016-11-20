@@ -3,9 +3,8 @@
 namespace VankoSoft\Alexandra\ODM\Repository;
 
 use VankoSoft\Alexandra\ODM\EntityGateway;
-use VankoSoft\Alexandra\ODM\EntityManager;
-use VankoSoft\Alexandra\ODM\Entity\BaseEntity;
-use VankoSoft\Alexandra\ODM\Entity\EntityNotExists;
+use VankoSoft\Alexandra\ODM\Entity\Entity;
+use VankoSoft\Alexandra\ODM\UnitOfWork\UnitOfWorkInterface;
 
 /**
  * @brief	Base class for repositories that used EntityGateway to load and persist entities.
@@ -13,35 +12,33 @@ use VankoSoft\Alexandra\ODM\Entity\EntityNotExists;
 class Repository implements EntityRepositoryInterface
 {
 	/**
-	 * @var \VankoSoft\Alexandra\ODM\EntityGatewayInterface
-	 */
-	private $eg;
-	
-	/**
-	 * @var \VankoSoft\Alexandra\ODM\EntityManager $em
-	 */
-	protected $em;
-	
-	/**
 	 * @var string $entityType
 	 */
 	protected $entityType;
 	
 	/**
+	 * @var \VankoSoft\Alexandra\ODM\Entity\EntitySupport $es
+	 */
+	protected $es;
+	
+	/**
+	 * @var \VankoSoft\Alexandra\ODM\UnitOfWork\UnitOfWorkInterface;
+	 */
+	protected $uow;
+	
+	/**
 	 * @brief	Initialize Entity Repository
 	 * 
 	 * @param	string $entityType
-	 * @param	\VankoSoft\Alexandra\ODM\EntityManager $em
+	 * @param	\VankoSoft\Alexandra\ODM\Entity\EntitySupport $es
 	 * 
 	 * @return	void
 	 */
-	public function __construct( $entityType, EntityManager $em )
+	public function __construct( $entityType, EntitySupport $es, UnitOfWorkInterface $uow )
 	{
-		$this->em					= $em;
-		$this->entityType			= $entityType;
-		$this->persistedEntities	= array();
-		
-		$this->eg					= new EntityGateway( $this->em );
+		$this->entityType	= $entityType;
+		$this->es			= $es;
+		$this->uow			= $uow;
 	}
 	
 	/**
@@ -54,7 +51,7 @@ class Repository implements EntityRepositoryInterface
 		$entity	= $hydrator->hydrate( new $this->entityType() , $data );
 		$meta 	= new EntityMeta( $this->gw, $hydrator );
 		
-		$unitOfWork->schedule( $entity, $meta, State::NOT_PERSISTED );
+		$this->uow->schedule( $entity, $meta, State::NOT_PERSISTED );
 		
 		return $entity;
 	}
@@ -72,7 +69,7 @@ class Repository implements EntityRepositoryInterface
 		foreach ( $rows as $row )
 		{
 			$entity	= $hydrator->hydrate( new $this->entityType() , $row );
-			$unitOfWork->schedule( $entity, $meta, State::PERSISTED );
+			$this->uow->schedule( $entity, $meta, State::PERSISTED );
 			$entities[]	= $entity;
 		}
 		
@@ -97,7 +94,7 @@ class Repository implements EntityRepositoryInterface
 	public function save( BaseEntity $entity, $query = null )
 	{
 		$meta 	= new EntityMeta( $this->gw, $hydrator );
-		$unitOfWork->schedule( $entity, $meta, State::PERSISTED );
+		$this->uow->schedule( $entity, $meta, State::PERSISTED );
 		
 	}
 	
@@ -107,18 +104,18 @@ class Repository implements EntityRepositoryInterface
 	public function remove( BaseEntity $entity, $query = null )
 	{
 		$meta 	= new EntityMeta( $this->gw, $hydrator );
-		$unitOfWork->schedule( $entity, $meta, State::REMOVED );
+		$this->uow->schedule( $entity, $meta, State::REMOVED );
 	}
 	
 	public function increment( $column )
 	{
 		$meta 	= new EntityMeta( $this->gw, $hydrator );
-		$unitOfWork->schedule( $entity, $meta, State::REMOVED );
+		$this->uow->schedule( $entity, $meta, State::REMOVED );
 	}
 	
 	public function decrement( $column )
 	{
 		$meta 	= new EntityMeta( $this->gw, $hydrator );
-		$unitOfWork->schedule( $entity, $meta, State::REMOVED );
+		$this->uow->schedule( $entity, $meta, State::REMOVED );
 	}
 }	

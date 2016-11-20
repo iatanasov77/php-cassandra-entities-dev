@@ -4,16 +4,17 @@ ini_set('display_errors', 1);
 
 require_once  __DIR__ . '/../vendor/autoload.php';
 
+use Noodlehaus\Config as NoodlehausConfig;
+
 use VankoSoft\Common\Application\Kernel;
-use VankoSoft\Alexandra\CONF\Config;
 use VankoSoft\Alexandra\DBAL\Connection\Connection;
 use VankoSoft\Alexandra\DBAL\TableGateway\TableGateway;
 use VankoSoft\Alexandra\ODM\Hydrator\DataStax\EntityHydrator as DataStaxEntityHydrator;
 use VankoSoft\AlexandraDev\Model\Entity\Product;
+use VankoSoft\Alexandra\ODM\RepositoryContainer;
 
 $kernel 	= new Kernel( dirname( dirname( __FILE__ ) ) );
-
-$config		= new Config( $kernel->getConfigPath() . 'vankosoft/alexandra' );
+$rc			= new RepositoryContainer( new NoodlehausConfig( $kernel->getConfigPath() . 'vankosoft/alexandra' ) );
 
 // Instatiate connection factory and get default connection
 $connection	= new Connection( $config->get( 'connection' ) );
