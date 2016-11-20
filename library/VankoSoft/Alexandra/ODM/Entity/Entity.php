@@ -12,7 +12,7 @@ use VankoSoft\Alexandra\ODM\Exception\OdmException;
  *			of the properties of all ORM entities.
  *			
  */
-class BaseEntity
+class Entity
 {
 	/**
 	 * @brief	Magic method 'get'

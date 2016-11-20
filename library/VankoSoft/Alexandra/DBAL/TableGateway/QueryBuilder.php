@@ -1,37 +1,108 @@
 <?php
 
+namespace VankoSoft\Alexandra\DBAL\TableGateway;
+
 class QueryBuilder
 {
-	public function select( $table, $columns, $where )
+	/**
+	 * @brief	Build a select query.
+	 *
+	 * @param	string $tableName
+	 * @param	array $columns
+	 * @param	array $keys
+	 *
+	 * @return	string
+	 */
+	public function select( $tableName, $columns, $keys = null )
 	{
 		$query	= sprintf( "SELECT %s FROM %s", implode( ', ', $columns ), $tableName );
-		
-		if ( is_array( $where ) && ! empty( $where ) )
+	
+		if ( is_array( $keys ) && ! empty( $keys ) )
 		{
-			$where	=  implode( ' AND ', array_map(
-					function ( $v, $k ) { return sprintf( "%s = :%s", $k, $v ); },
-					$keys,
-					$keys
-					) );
-		
+			$where	=  implode(
+								' AND ',
+								array_map(
+									function ( $v, $k ) { return sprintf( "%s = :%s", $k, $v ); },
+									$keys,
+									$keys
+								)
+							);
+	
 			$query	.= ' WHERE ' .$where;
 		}
 			
 		return $query;
 	}
 	
-	public function insert( $table, $valueMap )
+	/**
+	 * @brief	Build an insert cql query;
+	 *
+	 * @param	string $tableName
+	 * @param	array $keys
+	 *
+	 * @return	string
+	 */
+	public function insert( $tableName, $keys )
 	{
-		
+		$query	= sprintf( 
+							'INSERT INTO  %s ( %s ) VALUES ( :%s )',
+							$tableName,
+							implode( ', ', $keys ),
+							implode( ', :', $keys )
+						);
+	
+		return $query;
 	}
 	
-	public function update( $table, $valueMap )
+	/**
+	 * @brief	Build an update cql query;
+	 *
+	 * @param	string $tableName
+	 * @param	array $keys
+	 * @param	array $primaryKeys
+	 *
+	 * @return	string
+	 */
+	public function update( $tableName, $keys, $primaryKeys )
 	{
-		
+		$setKeys		= array_diff( $keys, $primaryKeys );
+	
+		$setString		= implode(', ', array_map(
+				function ( $v, $k ) { return sprintf( "%s = :%s", $k, $v ); },
+				$setKeys,
+				$setKeys
+				) );
+			
+		$whereString	= implode(' AND ', array_map(
+				function ( $v, $k ) { return sprintf( "%s = :%s", $k, $v ); },
+				$primaryKeys,
+				$primaryKeys
+				) );
+	
+		$query			= sprintf( 'UPDATE %s SET %s WHERE %s', $tableName, $setString, $whereString );
+	
+		return $query;
 	}
 	
-	public function delete( $table, $where )
+	/**
+	 * @brief	Build an delete cql query;
+	 *
+	 * @param	string $tableName
+	 * @param	array $keys
+	 * @param	array $primaryKeys
+	 *
+	 * @return	string
+	 */
+	public function delete( $tableName, $primaryKeys )
 	{
-		
+		$whereString	= implode(' AND ', array_map(
+				function ( $v, $k ) { return sprintf( "%s = :%s", $k, $v ); },
+				$primaryKeys,
+				$primaryKeys
+				) );
+	
+		$query			= sprintf( 'DELETE FROM %s WHERE %s', $tableName, $whereString );
+	
+		return $query;
 	}
 }

@@ -28,11 +28,6 @@ class Repository implements EntityRepositoryInterface
 	protected $entityType;
 	
 	/**
-	 * @var array $persistedEntities
-	 */
-	protected $persistedEntities;
-
-	/**
 	 * @brief	Initialize Entity Repository
 	 * 
 	 * @param	string $entityType
@@ -56,7 +51,12 @@ class Repository implements EntityRepositoryInterface
 	{
 		$hydrator	= new DefaultHydrator();
 		
-		return $hydrator->hydrate( new $this->entityType() , $data );
+		$entity	= $hydrator->hydrate( new $this->entityType() , $data );
+		$meta 	= new EntityMeta( $this->gw, $hydrator );
+		
+		$unitOfWork->schedule( $entity, $meta, State::NOT_PERSISTED );
+		
+		return $entity;
 	}
 	
 	/**
@@ -66,14 +66,19 @@ class Repository implements EntityRepositoryInterface
 	{
 		$hydrator	= new DataStaxHydrator();
 		$rows		= $this->eg->fetch( $this->entityType, $params, $options );
+		
 		$entities	= array();
+		$meta 	= new EntityMeta( $this->gw, $hydrator );
 		foreach ( $rows as $row )
 		{
-			$findedEntities[]	= $hydrator->hydrate( new $this->entityType() , $row );
+			$entity	= $hydrator->hydrate( new $this->entityType() , $row );
+			$unitOfWork->schedule( $entity, $meta, State::PERSISTED );
+			$entities[]	= $entity;
 		}
-		$this->persistedEntities	= array_merge( $this->persistedEntities, $findedEntities );
 		
-		return $findedEntities;
+		
+		
+		return $entities;
 	}
 	
 	/**
@@ -91,7 +96,9 @@ class Repository implements EntityRepositoryInterface
 	 */
 	public function save( BaseEntity $entity, $query = null )
 	{
-		return $this->eg->persist( $entity, EntityGateway::PERSIST_MODE_INSERT );
+		$meta 	= new EntityMeta( $this->gw, $hydrator );
+		$unitOfWork->schedule( $entity, $meta, State::PERSISTED );
+		
 	}
 	
 	/**
@@ -99,6 +106,19 @@ class Repository implements EntityRepositoryInterface
 	 */
 	public function remove( BaseEntity $entity, $query = null )
 	{
-		return $this->eg->persist( $entity, EntityGateway::PERSIST_MODE_DELETE );
+		$meta 	= new EntityMeta( $this->gw, $hydrator );
+		$unitOfWork->schedule( $entity, $meta, State::REMOVED );
+	}
+	
+	public function increment( $column )
+	{
+		$meta 	= new EntityMeta( $this->gw, $hydrator );
+		$unitOfWork->schedule( $entity, $meta, State::REMOVED );
+	}
+	
+	public function decrement( $column )
+	{
+		$meta 	= new EntityMeta( $this->gw, $hydrator );
+		$unitOfWork->schedule( $entity, $meta, State::REMOVED );
 	}
 }	

@@ -1,5 +1,10 @@
 <?php
 
+namespace VankoSoft\Alexandra\DBAL\TableGateway;
+
+use VankoSoft\Alexandra\DBAL\TableGatewayInterface;
+use VankoSoft\Alexandra\DBAL\AdapterInterface;
+
 class TableGateway implements TableGatewayInterface
 {
 	protected $tableName;
@@ -10,27 +15,52 @@ class TableGateway implements TableGatewayInterface
 	
 	protected $queryBuilder;
 	
-	public function __construct( $tableName, $tableMetaConfig, $dbAdapter )
+	public function __construct( $tableName, array $tableMeta, AdapterInterface $dbAdapter )
 	{
 		$this->tableName	= $tableName;
 		
-		$this->tableMeta	= $tableMetaConfig->get( $tableName );
+		$this->tableMeta	= $tableMeta;
 		
 		$this->dbAdapter	= $dbAdapter;
 		
 		$this->queryBuilder	= new QueryBuilder;
 	}
 	
-	public function select( array $params = array() )
+	public function select( array $whereMap = array(), array $columnSet = null )
 	{
-		$cql	= $this->queryBuilder->select( );
+		$columns	= $columnSet ?: array_keys( $this->tableMeta['columns'] );
+		$where		= array_keys( $whereMap );
 		
-		$rows	= $this->dbAdapter->query( $cql, $params );
+		if ( ! empty( $whereMap ) && ! empty( array_diff( $this->tableMeta['partition_keys'], $where ) ) )
+		{
+			throw new \Exception( 'Primary key params are mandatory when you make query with where clouse.' );
+		}
 		
-		return $rows;
+		$cql	= $this->queryBuilder->select( $this->tableName, $columns, $where );
+		
+		return  $this->dbAdapter->query( $cql, $whereMap );
 	}
 	
-	public function insert( $valueMap )
+	public function insert( array $valueMap )
+	{
+		$columns	= array_keys( $valueMap );
+		
+		if ( ! empty( array_diff( $this->tableMeta['columns'], $columns ) ) )
+		{
+			throw new \Exception( 'Missing columns into passed values.' );
+		}
+		
+		$cql	= $this->queryBuilder->insert( $this->tableName, $columns );
+		
+		return  $this->dbAdapter->query( $cql, $valueMa0,p );
+	}
+	
+	public function update( array $valueMap, array $whereMap )
+	{
+		
+	}
+	
+	public function delete( array $whereMap )
 	{
 		
 	}

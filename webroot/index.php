@@ -7,12 +7,13 @@ require_once  __DIR__ . '/../vendor/autoload.php';
 use VankoSoft\Common\Application\Kernel;
 use VankoSoft\Alexandra\CONF\Config;
 use VankoSoft\Alexandra\DBAL\Connection\Connection;
+use VankoSoft\Alexandra\DBAL\TableGateway\TableGateway;
 use VankoSoft\Alexandra\ODM\Hydrator\DataStax\EntityHydrator as DataStaxEntityHydrator;
-use \VankoSoft\AlexandraDev\Model\Entity\Product;
+use VankoSoft\AlexandraDev\Model\Entity\Product;
 
 $kernel 	= new Kernel( dirname( dirname( __FILE__ ) ) );
 
-$config		= new Config( $kernel->getConfigPath() . 'vankosoft/alexandra/connection.php' );
+$config		= new Config( $kernel->getConfigPath() . 'vankosoft/alexandra' );
 
 // Instatiate connection factory and get default connection
 $connection	= new Connection( $config->get( 'connection' ) );
@@ -29,6 +30,11 @@ $db->query( $cql, array( 4, 'product4', 45, 10, array( 1,3 ) ) );
 
 // Test Adapter
 //echo "<pre>"; var_dump( $db->query( 'select * from products' ) ); die;
+
+
+// Test Table Gateway
+$gw	= new TableGateway( 'products', $config->get( 'schema.products' ), $db );
+echo '<pre>'; var_dump( $gw->select() ); die;
 
 // Test Hydrator
 $hydrator	= new DataStaxEntityHydrator();

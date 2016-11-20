@@ -4,7 +4,7 @@ namespace VankoSoft\Alexandra\ODM;
 
 use VankoSoft\Alexandra\ODM\Entity\BaseEntity;
 
-interface EntityRepositoryInterface
+interface RepositoryInterface
 {
 	/**
 	 * @brief	Create a new entity object and populate with passed data.
