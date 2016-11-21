@@ -9,6 +9,7 @@ use VankoSoft\Alexandra\ODM\UnitOfWork\UnitOfWork;
 use VankoSoft\Alexandra\DBAL\Driver\DataStax\Adapter as DbAdapter;
 use VankoSoft\Alexandra\ODM\Entity\Entity;
 use VankoSoft\Alexandra\ODM\Entity\EntitySupport;
+use VankoSoft\Alexandra\ODM\Hydrator\HydratorFactory;
 
 /**
  * @brief	EntityManager Service.
@@ -84,7 +85,10 @@ class RepositoryContainer implements RepositoryContainerInterface
 															$config->get( 'schema.' . $table ),
 															$this->dbAdapter
 														);
-			$hydrator					= new EntityHydrator();
+			$hydrator					= HydratorFactory::get(
+																$config->get( 'connection.type' ),
+																$config->get( 'schema.' . $table )
+															);
 			$entitySupport				= new EntitySupport( $tableGateway, $hydrator );
 			
 			$this->repositories[$alias]	= new $repository( $entity, $entitySupport, $this->uow );

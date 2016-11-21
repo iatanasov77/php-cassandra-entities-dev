@@ -13,10 +13,6 @@ use VankoSoft\Alexandra\DBAL\Exception\ConnectionException;
 
 class Connection implements ConnectionInterface
 {
-	const DRIVER_DATASTAX		= 'datastax';
-	const DRIVER_PDO			= 'pdo';
-	const DRIVER_EVSEEVNN		= 'evseevnn';
-	
 	const DEFAULT_CONNECTION	= 'default';
 	
 	private $defaultConnection;
@@ -92,15 +88,15 @@ class Connection implements ConnectionInterface
 	{
 		switch ( $config['driver'] )
 		{
-			case self::DRIVER_DATASTAX:
+			case Driver::DATASTAX:
 				$adapter	= new DataStaxAdapter( $config );
 				
 				break;
-			case self::DRIVER_PDO:
+			case Driver::PDO:
 				$adapter	= new PdoAdapter( $config );
 				
 				break;
-			case self::DRIVER_EVSEEVNN:
+			case Driver::EVSEEVNN:
 				$adapter	= new EvseevAdapter( $config );
 				
 				break;

@@ -52,7 +52,7 @@ class TableGateway implements TableGatewayInterface
 		
 		$cql	= $this->queryBuilder->insert( $this->tableName, $columns );
 		
-		return  $this->dbAdapter->query( $cql, $valueMa0,p );
+		return  $this->dbAdapter->query( $cql, $valueMap );
 	}
 	
 	public function update( array $valueMap, array $whereMap )
