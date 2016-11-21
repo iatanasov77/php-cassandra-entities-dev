@@ -2,11 +2,11 @@
 
 namespace VankoSoft\Alexandra\ODM\Hydrator;
 
-use VankoSoft\Alexandra\ODM\Entity\BaseEntity;
+use VankoSoft\Alexandra\ODM\Entity\Entity;
 
 interface HydratorInterface
 {
-	public function extract( BaseEntity $entity );
+	public function extract( Entity $entity );
 	
-	public function hydrate( BaseEntity &$entity, $data );
+	public function hydrate( Entity &$entity, $data );
 }

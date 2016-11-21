@@ -14,10 +14,10 @@ class UnitOfWork implements UnitOfWorkInterface
 	
 	public function __construct()
 	{
-		$this->scheduleForInsert	= new SplObjectStorage;
-		$this->scheduleForUpdate	= new SplObjectStorage;
-		$this->scheduleForDelete	= new SplObjectStorage;
-		$this->entityClean			= new SplObjectStorage;
+		$this->scheduleForInsert	= new \SplObjectStorage;
+		$this->scheduleForUpdate	= new \SplObjectStorage;
+		$this->scheduleForDelete	= new \SplObjectStorage;
+		$this->entityClean			= new \SplObjectStorage;
 	}
 	
 	public function addEntity( $entity, $state )

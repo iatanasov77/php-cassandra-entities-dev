@@ -2,14 +2,14 @@
 
 namespace VankoSoft\Alexandra\ODM\Repository;
 
-use VankoSoft\Alexandra\ODM\EntityGateway;
 use VankoSoft\Alexandra\ODM\Entity\Entity;
+use VankoSoft\Alexandra\ODM\Entity\EntitySupport;
 use VankoSoft\Alexandra\ODM\UnitOfWork\UnitOfWorkInterface;
 
 /**
  * @brief	Base class for repositories that used EntityGateway to load and persist entities.
  */
-class Repository implements EntityRepositoryInterface
+class Repository implements RepositoryInterface
 {
 	/**
 	 * @var string $entityType
@@ -46,7 +46,7 @@ class Repository implements EntityRepositoryInterface
 	 */
 	public function create( array $data = array() )
 	{		
-		$entity	= $this->es->hydrator()->hydrate( new $this->entityType() , $data );
+		$entity	= $this->es->hydrator()->hydrate( new $this->entityType , $data );
 		
 		$this->uow->schedule( $entity, $this->es, State::NOT_PERSISTED );
 		
@@ -56,19 +56,17 @@ class Repository implements EntityRepositoryInterface
 	/**
 	 * @copydoc	\VankoSoft\Alexandra\ODM\EntityRepositoryInterface::find()
 	 */
-	public function find( $params, $options, $query = null )
+	public function find( array $params, array $options = array() )
 	{
 		$rows		= $this->es->gw()->select( $params );
 		
 		$entities	= array();
 		foreach ( $rows as $row )
 		{
-			$entity	= $this->es->hydrator()->hydrate( new $this->entityType() , $row );
+			$entity	= $this->es->hydrator()->hydrate( new $this->entityType , $row );
 			$this->uow->schedule( $entity, $this->es, State::PERSISTED );
 			$entities[]	= $entity;
 		}
-		
-		
 		
 		return $entities;
 	}
@@ -76,7 +74,7 @@ class Repository implements EntityRepositoryInterface
 	/**
 	 * @copydoc	\VankoSoft\Alexandra\ODM\EntityRepositoryInterface::findOne()
 	 */
-	public function findOne( $params, $options, $query = null )
+	public function findOne( array $params, array $options = array() )
 	{
 		$entities	= $this->find( $params, $options );
 		
@@ -86,16 +84,15 @@ class Repository implements EntityRepositoryInterface
 	/**
 	 * @copydoc	\VankoSoft\Alexandra\ODM\EntityRepositoryInterface::save()
 	 */
-	public function save( BaseEntity $entity, $query = null )
+	public function save( Entity $entity )
 	{
 		$this->uow->schedule( $entity, $this->es, State::PERSISTED );
-		
 	}
 	
 	/**
 	 * @copydoc	\VankoSoft\Alexandra\ODM\EntityRepositoryInterface::remove()
 	 */
-	public function remove( BaseEntity $entity, $query = null )
+	public function remove( Entity $entityl )
 	{
 		$this->uow->schedule( $entity, $this->es, State::REMOVED );
 	}

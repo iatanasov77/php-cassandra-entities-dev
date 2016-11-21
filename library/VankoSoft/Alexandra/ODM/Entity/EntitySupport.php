@@ -3,7 +3,7 @@
 namespace VankoSoft\Alexandra\ODM\Entity;
 
 use VankoSoft\Alexandra\DBAL\TableGatewayInterface;
-use VankoSoft\Alexandra\ODM\Hydrator\EntityHydratorInterface;
+use VankoSoft\Alexandra\ODM\Hydrator\HydratorInterface;
 
 class EntitySupport
 {
@@ -13,11 +13,11 @@ class EntitySupport
 	private $gw;
 	
 	/**
-	 * @var \VankoSoft\Alexandra\ODM\Hydrator\EntityHydratorInterface
+	 * @var \VankoSoft\Alexandra\ODM\Hydrator\HydratorInterface
 	 */
 	private $hydrator;
 
-	public function __construct( TableGatewayInterface $gw, EntityHydratorInterface $hydrator )
+	public function __construct( TableGatewayInterface $gw, HydratorInterface $hydrator )
 	{
 		$this->gw		= $gw;
 		$this->hydrator	= $hydrator;

@@ -2,10 +2,10 @@
 
 return array(
 	'repository' => array(
-		'Main::Blog' => array(
-			'table'         => '',
-			'repository'    => '',
-			'entity'        => ''
+		'Main::Products' => array(
+			'table'         => 'products',
+			'repository'    => '\VankoSoft\Alexandra\ODM\Repository\Repository',
+			'entity'        => '\VankoSoft\AlexandraDev\Model\Entity\Product'
 		)
 	)
 );

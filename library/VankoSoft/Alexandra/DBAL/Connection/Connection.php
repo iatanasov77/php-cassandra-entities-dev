@@ -53,7 +53,7 @@ class Connection implements ConnectionInterface
 	
 	public function get( $connectionName = null )
 	{
-		$connectionName	= $connectionName != null ?: $this->defaultConnection;
+		$connectionName	= $connectionName ?: $this->defaultConnection;
 		
 		if ( ! isset( $this->connections[$connectionName] ) && isset( $this->config[$connectionName] ) )
 		{

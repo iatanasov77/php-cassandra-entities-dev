@@ -10,6 +10,7 @@ use VankoSoft\Alexandra\DBAL\Driver\DataStax\Adapter as DbAdapter;
 use VankoSoft\Alexandra\ODM\Entity\Entity;
 use VankoSoft\Alexandra\ODM\Entity\EntitySupport;
 use VankoSoft\Alexandra\ODM\Hydrator\HydratorFactory;
+use VankoSoft\Alexandra\DBAL\TableGateway\TableGateway;
 
 /**
  * @brief	EntityManager Service.
@@ -18,9 +19,11 @@ use VankoSoft\Alexandra\ODM\Hydrator\HydratorFactory;
 class RepositoryContainer implements RepositoryContainerInterface
 {	
 	/**
-	 * @var \Enigma\Library\Database\Alexandra\Adapter\Adapter $dbAdapter
+	 * @var \VankoSoft\Alexandra\DBAL\AdapterInterface $db
 	 */
-	protected $dbAdapter;
+	protected $db;
+	
+	protected $config;
 	
 	/**
 	 * @var \VankoSoft\Alexandra\ODM\UnitOfWork\UnitOfWorkInterface $uow;
@@ -46,13 +49,11 @@ class RepositoryContainer implements RepositoryContainerInterface
 	 */
 	public function __construct( NoodlehausConfig $config )
 	{
+		$this->config		= $config;
 		$connection			= new Connection( $config->get( 'connection' ) );
-		$connection->setDefaultConnection( 'evseevnn' );
 		
-		$this->db			= $connection->get();
-		
+		$this->db			= $connection->get( $config->get( 'preferences.connection' ) );
 		$this->uow			= new UnitOfWork();
-		
 		$this->repositories	= array();
 	}
 	
@@ -67,27 +68,18 @@ class RepositoryContainer implements RepositoryContainerInterface
 			$entityBase		= '\VankoSoft\Alexandra\ODM\Entity\Entity';
 			$repositoryBase	= '\VankoSoft\Alexandra\ODM\Repository\RepositoryInterface';
 			
-			extract( $this->entityMetaDataConfig->getRepositoryConfig( $alias ) );
+			$repository					= $this->config->get( 'repository.' . $alias . '.repository' );
+			$entity						= $this->config->get( 'repository.' . $alias . '.entity' );
+			$table						= $this->config->get( 'repository.' . $alias . '.table' );
 			
-			switch ( true )
-			{
-				case ! isset( $dbTable ) || ! isset( $repository ) || ! isset( $entity ):
-					throw new OrmException( 'Invalid repository config!' );
-				case ! class_exists( $entity ) || ! is_subclass_of( $entity, $entityBase ):
-					throw new OrmException( 'Invalid entity type!' );
-				case ! class_exists( $repository ) || ! is_subclass_of( $repository, $repositoryBase ):
-					throw new OrmException( 'Invalid repository type!' );
-			}
-			
-			$table						= $config->get( 'repositories.' . $alias . '.table' );
 			$tableGateway				= new TableGateway(
 															$table,
-															$config->get( 'schema.' . $table ),
-															$this->dbAdapter
+															$this->config->get( 'schema.' . $table ),
+															$this->db
 														);
 			$hydrator					= HydratorFactory::get(
-																$config->get( 'connection.type' ),
-																$config->get( 'schema.' . $table )
+																$this->config->get( 'preferences.connection' ),
+																$this->config->get( 'schema.' . $table )
 															);
 			$entitySupport				= new EntitySupport( $tableGateway, $hydrator );
 			

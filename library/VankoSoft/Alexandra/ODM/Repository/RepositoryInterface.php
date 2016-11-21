@@ -1,8 +1,8 @@
 <?php
 
-namespace VankoSoft\Alexandra\ODM;
+namespace VankoSoft\Alexandra\ODM\Repository;
 
-use VankoSoft\Alexandra\ODM\Entity\BaseEntity;
+use VankoSoft\Alexandra\ODM\Entity\Entity;
 
 interface RepositoryInterface
 {
@@ -28,7 +28,7 @@ interface RepositoryInterface
 	 * 
 	 * @return	array
 	 */
-	public function find( array $params, array $options, $query );
+	public function find( array $params, array $options );
 	
 	/**
 	 * @brief	Find just one entity by provided params and options.
@@ -42,7 +42,7 @@ interface RepositoryInterface
 	 * 
 	 * @return \VankoSoft\Alexandra\ODM\BaseEntity
 	 */
-	public function findOne( array $params, array $options, $query );
+	public function findOne( array $params, array $options );
 	
 	/**
 	 * @brief	Remove an entity from database.
@@ -52,7 +52,7 @@ interface RepositoryInterface
 	 * 
 	 * @return	void
 	 */
-	public function remove( BaseEntity $entity, $query );
+	public function remove( Entity $entity );
 	
 	/**
 	 * @brief	Persist an entity into the database.
@@ -62,5 +62,5 @@ interface RepositoryInterface
 	 * 
 	 * @return	void
 	 */
-	public function save( BaseEntity $entity, $query );
+	public function save( Entity $entity );
 }
