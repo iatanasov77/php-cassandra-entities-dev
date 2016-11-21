@@ -45,13 +45,10 @@ class Repository implements EntityRepositoryInterface
 	 * @copydoc	\VankoSoft\Alexandra\ODM\EntityRepositoryInterface::create()
 	 */
 	public function create( array $data = array() )
-	{
-		$hydrator	= new DefaultHydrator();
+	{		
+		$entity	= $this->es->hydrator()->hydrate( new $this->entityType() , $data );
 		
-		$entity	= $hydrator->hydrate( new $this->entityType() , $data );
-		$meta 	= new EntityMeta( $this->gw, $hydrator );
-		
-		$this->uow->schedule( $entity, $meta, State::NOT_PERSISTED );
+		$this->uow->schedule( $entity, $this->es, State::NOT_PERSISTED );
 		
 		return $entity;
 	}
@@ -61,15 +58,13 @@ class Repository implements EntityRepositoryInterface
 	 */
 	public function find( $params, $options, $query = null )
 	{
-		$hydrator	= new DataStaxHydrator();
-		$rows		= $this->eg->fetch( $this->entityType, $params, $options );
+		$rows		= $this->es->gw()->select( $params );
 		
 		$entities	= array();
-		$meta 	= new EntityMeta( $this->gw, $hydrator );
 		foreach ( $rows as $row )
 		{
-			$entity	= $hydrator->hydrate( new $this->entityType() , $row );
-			$this->uow->schedule( $entity, $meta, State::PERSISTED );
+			$entity	= $this->es->hydrator()->hydrate( new $this->entityType() , $row );
+			$this->uow->schedule( $entity, $this->es, State::PERSISTED );
 			$entities[]	= $entity;
 		}
 		
@@ -93,8 +88,7 @@ class Repository implements EntityRepositoryInterface
 	 */
 	public function save( BaseEntity $entity, $query = null )
 	{
-		$meta 	= new EntityMeta( $this->gw, $hydrator );
-		$this->uow->schedule( $entity, $meta, State::PERSISTED );
+		$this->uow->schedule( $entity, $this->es, State::PERSISTED );
 		
 	}
 	
@@ -103,19 +97,16 @@ class Repository implements EntityRepositoryInterface
 	 */
 	public function remove( BaseEntity $entity, $query = null )
 	{
-		$meta 	= new EntityMeta( $this->gw, $hydrator );
-		$this->uow->schedule( $entity, $meta, State::REMOVED );
+		$this->uow->schedule( $entity, $this->es, State::REMOVED );
 	}
 	
 	public function increment( $column )
 	{
-		$meta 	= new EntityMeta( $this->gw, $hydrator );
-		$this->uow->schedule( $entity, $meta, State::REMOVED );
+		$this->uow->schedule( $entity, $this->es, State::REMOVED );
 	}
 	
 	public function decrement( $column )
 	{
-		$meta 	= new EntityMeta( $this->gw, $hydrator );
-		$this->uow->schedule( $entity, $meta, State::REMOVED );
+		$this->uow->schedule( $entity, $this->es, State::REMOVED );
 	}
 }	

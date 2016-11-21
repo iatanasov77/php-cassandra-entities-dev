@@ -22,4 +22,14 @@ class EntitySupport
 		$this->gw		= $gw;
 		$this->hydrator	= $hydrator;
 	}
+	
+	public function gw()
+	{
+		return $this->gw;
+	}
+	
+	public function hydrator()
+	{
+		return $this->hydrator;
+	}
 }

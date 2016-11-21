@@ -7,7 +7,8 @@ use Noodlehaus\Config as NoodlehausConfig;
 use VankoSoft\Alexandra\DBAL\Connection\Connection;
 use VankoSoft\Alexandra\ODM\UnitOfWork\UnitOfWork;
 use VankoSoft\Alexandra\DBAL\Driver\DataStax\Adapter as DbAdapter;
-use VankoSoft\Alexandra\ODM\Entity\BaseEntity;
+use VankoSoft\Alexandra\ODM\Entity\Entity;
+use VankoSoft\Alexandra\ODM\Entity\EntitySupport;
 
 /**
  * @brief	EntityManager Service.
@@ -62,8 +63,8 @@ class RepositoryContainer implements RepositoryContainerInterface
 		// Repositories lazy Loading. If repository is not loaded , try to load it.
 		if ( ! isset( $this->repositories[$alias] ) )
 		{
-			$entityBase		= '\VankoSoft\Alexandra\ODM\Entity\BaseEntity';
-			$repositoryBase	= '\VankoSoft\Alexandra\ODM\EntityRepositoryInterface';
+			$entityBase		= '\VankoSoft\Alexandra\ODM\Entity\Entity';
+			$repositoryBase	= '\VankoSoft\Alexandra\ODM\Repository\RepositoryInterface';
 			
 			extract( $this->entityMetaDataConfig->getRepositoryConfig( $alias ) );
 			
