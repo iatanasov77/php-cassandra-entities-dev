@@ -1,56 +1,37 @@
 <?php
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
+if (PHP_SAPI == 'cli-server') {
+    // To help the built-in PHP dev server, check if the request was actually for
+    // something which should probably be served as a static file
+    $url  = parse_url($_SERVER['REQUEST_URI']);
+    $file = __DIR__ . $url['path'];
+    if (is_file($file)) {
+        return false;
+    }
+}
 
-require_once  __DIR__ . '/../vendor/autoload.php';
+error_reporting( E_ALL );
+ini_set( 'display_errors', 1 );
 
+require __DIR__ . '/../vendor/autoload.php';
+
+use Slim\App as SlimApp;
 use Noodlehaus\Config as NoodlehausConfig;
 
-use VankoSoft\Common\Application\Kernel;
-use VankoSoft\Alexandra\DBAL\Connection\Connection;
-use VankoSoft\Alexandra\DBAL\TableGateway\TableGateway;
-use VankoSoft\Alexandra\ODM\Hydrator\DataStax\EntityHydrator as DataStaxEntityHydrator;
-use VankoSoft\AlexandraDev\Model\Entity\Product;
-use VankoSoft\Alexandra\ODM\RepositoryContainer;
+use VankoSoft\Common\Application\Location;
 
-$kernel 	= new Kernel( dirname( dirname( __FILE__ ) ) );
-
-// Instatiate connection factory and get default connection
-//$connection	= new Connection( $config->get( 'connection' ) );
-//$db			= $connection->get( 'evseevnn' );
-
-//echo "<pre>"; var_dump( $db->schema() ); die;
-//$cql	= 'INSERT INTO products ( product_id, title, qty, price, categories ) VALUES ( :product_id, :title, :qty, :price, :categories )';
-//$db->query( $cql, array( 1, 'product1', 30, 10, array( 1,3 ) ) );
-//$db->query( $cql, array( 2, 'product2', 12, 10, array( 1,3 ) ) );
-//$db->query( $cql, array( 3, 'product3', 32, 10, array( 1,3 ) ) );
-//$db->query( $cql, array( 4, 'product4', 45, 10, array( 1,3 ) ) );
-
-// Test Adapter
-//echo "<pre>"; var_dump( $db->query( 'select * from products' ) ); die;
+session_start();
 
 
-// Test Table Gateway
-//$gw	= new TableGateway( 'products', $config->get( 'schema.products' ), $db );
-//echo '<pre>'; var_dump( $gw->select() ); die;
+$app 		= new SlimApp();
 
-// Test Hydrator
-//$hydrator	= new DataStaxEntityHydrator();
+// Set up dependencies
+require __DIR__ . '/../src/dependencies.php';
 
-//$result		= $db->query( 'select * from products' );
+// Register middleware
+//require __DIR__ . '/../src/middleware.php';
 
-// $products	= array();
-// foreach ( $result as $row )
-// {
-// 	$product	= new Product();
-// 	$hydrator->hydrate( $product, $row );
-// 	$products[]	= $product;
-// }
+// Register routes
+require __DIR__ . '/../src/routes.php';
 
-// echo "<pre>"; var_dump( $products ); die;
-
-$rc				= new RepositoryContainer( new NoodlehausConfig( $kernel->getConfigPath() . 'vankosoft/alexandra' ) );
-$productsRepo	= $rc->get( 'Main::Products' );
-$product		= $productsRepo->findOne( array( 'product_id' => 1 ) );
-
-var_dump( $product );
+// Run app
+$app->run();

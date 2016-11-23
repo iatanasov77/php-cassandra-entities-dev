@@ -52,34 +52,55 @@ class DataStaxHydrator implements HydratorInterface
 	}
 	
 	/**
+	 * @brief	Hydrate an entity with passed row columns and return an array list of updated columns
 	 * 
 	 * @param	\VankoSoft\Alexandra\ODM\Entity\Entity $entity
 	 * @param	mixed $rowData
 	 * 
-	 * @return void
+	 * @return	array
 	 */
 	public function hydrate( Entity &$entity, $rowData )
 	{
+		$updatedColumns	= array();
 		foreach ( $rowData as $key => $value )
 		{
 			$property	= lcfirst( $this->camelize( $key ) );
 			switch ( true )
 			{
 				case ( $value instanceof \Cassandra\Float ):
-					$entity->$property	= $value->value();
+					if ( $entity->$property	!== $value->value() )
+					{
+						$entity->$property	= $value->value();
+						$updatedColumns[]	= $key;
+					}
 						
 					break;
 				case ( $value instanceof \Cassandra\Set ):
-					$entity->$property	= $value->values();
+					if ( $entity->$property	!== $value->values() )
+					{
+						$entity->$property	= $value->values();
+						$updatedColumns[]	= $key;
+					}
 					
 					break;
 				case ( $value instanceof \Cassandra\Map ):
-					$entity->$property	= array_map( $value->keys(), $value->values() );
-						
+					$arrayMap	= array_map( $value->keys(), $value->values() );
+					if ( $entity->$property	!== $arrayMap )
+					{
+						$entity->$property	= $arrayMap;
+						$updatedColumns[]	= $key;
+					}
+					
 					break;
 				default:
-					$entity->$property	= $value;
+					if ( $entity->$property	!== $value )
+					{
+						$entity->$property	= $value;
+						$updatedColumns[]	= $key;
+					}
 			}
 		}
+		
+		return $updatedColumns;
 	}
 }

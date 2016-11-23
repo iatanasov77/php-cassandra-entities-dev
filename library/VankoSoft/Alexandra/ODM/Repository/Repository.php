@@ -5,7 +5,7 @@ namespace VankoSoft\Alexandra\ODM\Repository;
 use VankoSoft\Alexandra\ODM\Entity\Entity;
 use VankoSoft\Alexandra\ODM\Entity\EntitySupport;
 use VankoSoft\Alexandra\ODM\UnitOfWork\UnitOfWorkInterface;
-
+use VankoSoft\Alexandra\ODM\UnitOfWork\EntityState;
 /**
  * @brief	Base class for repositories that used EntityGateway to load and persist entities.
  */
@@ -48,7 +48,7 @@ class Repository implements RepositoryInterface
 	{		
 		$entity	= $this->es->hydrator()->hydrate( new $this->entityType , $data );
 		
-		$this->uow->schedule( $entity, $this->es, State::NOT_PERSISTED );
+		$this->uow->schedule( $entity, $this->es, EntityState::NOT_PERSISTED );
 		
 		return $entity;
 	}
@@ -56,15 +56,17 @@ class Repository implements RepositoryInterface
 	/**
 	 * @copydoc	\VankoSoft\Alexandra\ODM\EntityRepositoryInterface::find()
 	 */
-	public function find( array $params, array $options = array() )
+	public function find( array $params = array(), array $options = array() )
 	{
 		$rows		= $this->es->gw()->select( $params );
 		
 		$entities	= array();
 		foreach ( $rows as $row )
 		{
-			$entity	= $this->es->hydrator()->hydrate( new $this->entityType , $row );
-			$this->uow->schedule( $entity, $this->es, State::PERSISTED );
+			$entity	= new $this->entityType;
+			
+			$changed	= $this->es->hydrator()->hydrate( $entity , $row );
+			$this->uow->schedule( $entity, $this->es, EntityState::PERSISTED );
 			$entities[]	= $entity;
 		}
 		
@@ -86,7 +88,7 @@ class Repository implements RepositoryInterface
 	 */
 	public function save( Entity $entity )
 	{
-		$this->uow->schedule( $entity, $this->es, State::PERSISTED );
+		$this->uow->schedule( $entity, $this->es, EntityState::NOT_PERSISTED );
 	}
 	
 	/**
@@ -94,16 +96,16 @@ class Repository implements RepositoryInterface
 	 */
 	public function remove( Entity $entityl )
 	{
-		$this->uow->schedule( $entity, $this->es, State::REMOVED );
+		$this->uow->schedule( $entity, $this->es, EntityState::REMOVED );
 	}
 	
 	public function increment( $column )
 	{
-		$this->uow->schedule( $entity, $this->es, State::REMOVED );
+		$this->uow->schedule( $entity, $this->es, EntityState::UPDATED );
 	}
 	
 	public function decrement( $column )
 	{
-		$this->uow->schedule( $entity, $this->es, State::REMOVED );
+		$this->uow->schedule( $entity, $this->es, EntityState::UPDATED );
 	}
 }	

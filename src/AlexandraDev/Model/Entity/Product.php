@@ -2,11 +2,10 @@
 
 namespace VankoSoft\AlexandraDev\Model\Entity;
 
-use VankoSoft\Alexandra\ODM\Entity\BaseEntity;
+use VankoSoft\Alexandra\ODM\Entity\Entity;
 
-class Product extends BaseEntity
+class Product extends Entity
 {
-	
 	public $productId;
 	
 	public $title;

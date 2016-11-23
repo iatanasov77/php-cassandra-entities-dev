@@ -4,10 +4,8 @@ namespace VankoSoft\Alexandra\DBAL\Connection;
 
 use VankoSoft\Alexandra\DBAL\ConnectionInterface;
 use VankoSoft\Alexandra\DBAL\AdapterInterface;
-
-use VankoSoft\Alexandra\DBAL\Driver\DataStax\Adapter as DataStaxAdapter;
-use VankoSoft\Alexandra\DBAL\Driver\PDO\Adapter as PdoAdapter;
-use VankoSoft\Alexandra\DBAL\Driver\EvseevNN\Adapter as EvseevAdapter;
+use VankoSoft\Alexandra\DBAL\Adapter\Driver;
+use VankoSoft\Alexandra\DBAL\Logger\Logger;
 
 use VankoSoft\Alexandra\DBAL\Exception\ConnectionException;
 
@@ -21,9 +19,12 @@ class Connection implements ConnectionInterface
 	
 	private $config;
 	
-	public function __construct( array $config )
+	private $loggerConfig;
+	
+	public function __construct( array $config, array $loggerConfig )
 	{
 		$this->config				= $config;
+		$this->loggerConfig			= $loggerConfig;
 		$this->connections			= array();
 		$this->defaultConnection	= self::DEFAULT_CONNECTION;
 	}
@@ -49,6 +50,7 @@ class Connection implements ConnectionInterface
 		}
 		
 		$this->connections[$connectionName]->close();
+		unset( $this->connections[$connectionName] );
 	}
 	
 	public function get( $connectionName = null )
@@ -57,7 +59,7 @@ class Connection implements ConnectionInterface
 		
 		if ( ! isset( $this->connections[$connectionName] ) && isset( $this->config[$connectionName] ) )
 		{
-			$this->connections[$connectionName]	= $this->connect( $this->config[$connectionName] );
+			$this->connections[$connectionName]	= $this->_connect( $this->config[$connectionName], $this->loggerConfig );
 		}
 		
 		if ( ! isset( $this->connections[$connectionName] ) )
@@ -66,11 +68,6 @@ class Connection implements ConnectionInterface
 		}
 		
 		return $this->connections[$connectionName];
-	}
-	
-	public function set( $connectionName, AdapterInterface $adapter )
-	{
-		$this->connections[$connectionName]	= $adapter;
 	}
 	
 	/////////////////////////////////////////////////////////////////////////////////////////////////
@@ -84,29 +81,19 @@ class Connection implements ConnectionInterface
 	 * 
 	 * @return 	AdapterInterface
 	 */
-	protected function connect( array $config )
+	protected function _connect( array $config, array $logChanels = array() )
 	{
-		switch ( $config['driver'] )
-		{
-			case Driver::DATASTAX:
-				$adapter	= new DataStaxAdapter( $config );
-				
-				break;
-			case Driver::PDO:
-				$adapter	= new PdoAdapter( $config );
-				
-				break;
-			case Driver::EVSEEVNN:
-				$adapter	= new EvseevAdapter( $config );
-				
-				break;
-			default:
-				throw new \Exception( 'Unkonwn cassandra driver.' );
-		}
+		$adapter	= Driver::get( $config );
 		
 		if ( ! $adapter instanceof AdapterInterface )
 		{
 			throw new \Exception( 'Adapter should be an instance of "AdapterInterface".' );
+		}
+		
+		// Set logger if it has defined log chanels
+		if	( ! empty( $logChanels ) )
+		{
+			$adapter->setLogger( new Logger( $logChanels ) );
 		}
 		
 		return $adapter;

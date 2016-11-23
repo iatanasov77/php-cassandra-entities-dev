@@ -4,6 +4,8 @@ namespace VankoSoft\Alexandra\DBAL;
 
 interface AdapterInterface
 {
+	function driver();
+	
 	function close();
 	
 	function query( $cql, array $params, array $options );

@@ -2,10 +2,7 @@
 
 namespace VankoSoft\Common\Application;
 
-use Noodlehaus\Config as ConfigLoader;
-use VankoSoft\Common\Service\ServiceContainer;
-
-class Kernel
+class Location
 {
 	protected $rootPath;
 	
@@ -15,23 +12,15 @@ class Kernel
 	
 	protected $publicPath;
 	
-	protected $configContainer;
-	
-	protected $serviceContainer;
-	
 	public function __construct( $rootPath )
 	{
 		$this->rootPath			= $rootPath . DIRECTORY_SEPARATOR;
 		
 		$this->configPath		= $this->rootPath . 'config' . DIRECTORY_SEPARATOR;
 		
-		$this->appPath			= $this->rootPath . 'src' . DIRECTORY_SEPARATOR;
+		$this->srcPath			= $this->rootPath . 'src' . DIRECTORY_SEPARATOR;
 		
 		$this->publicPath		= $this->rootPath . 'webroot' . DIRECTORY_SEPARATOR;
-		
-		$this->config			= new ConfigLoader( $this->configPath );
-		
-		$this->serviceContainer	= new ServiceContainer( $this );
 	}
 	
 	public function getRootPath()
@@ -44,23 +33,13 @@ class Kernel
 		return $this->configPath;
 	}
 	
-	public function getAppPath()
+	public function getSrcPath()
 	{
-		return $this->appPath;
+		return $this->srcPath;
 	}
 	
 	public function getPublicPath()
 	{
 		return $this->publicPath;
-	}
-	
-	public function getConfig()
-	{
-		return $this->config;
-	}
-	
-	public function getServiceContainer()
-	{
-		return $this->serviceContainer;
 	}
 }

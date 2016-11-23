@@ -2,6 +2,6 @@
 
 return array(
 	'preferences' => array(
-		'connection' => 'datastax'
+		'connection' => 'DataStax'
 	)
 );

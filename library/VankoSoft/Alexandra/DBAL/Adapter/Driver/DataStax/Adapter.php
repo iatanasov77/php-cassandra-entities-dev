@@ -1,55 +1,18 @@
 <?php
 
-namespace VankoSoft\Alexandra\DBAL\Driver\DataStax;
+namespace VankoSoft\Alexandra\DBAL\Adapter\Driver\DataStax;
 
-use VankoSoft\Alexandra\DBAL\AdapterInterface;
+use VankoSoft\Alexandra\DBAL\Adapter\AbstractAdapter;
 
-class Adapter implements AdapterInterface
+class Adapter extends AbstractAdapter
 {
 	const BATCH_LOGGED		= 1;
 	const BATCH_UNLOGGED	= 2;
 	const BATCH_COUNTER		= 3;
 	
-	const DEFAULT_BATCH		= 'default';
-	
-	/**
-	 * @var	\Cassandra\Session $db
-	 */
-	protected $db;
-	
-	/**
-	 * @details	Named batch store
-	 * 
-	 * @var	array $batch;
-	 */
-	protected $batch;
-	
-	public function __construct( array $config )
-	{
-		$cluster		= \Cassandra::cluster()	->withContactPoints( join( ',', $config['contact_points'] ) )
-												->withPort( $config['port'] )
-												->build();
-		
-		$this->db		= $cluster->connect( $config['keyspace'] );
-		
-		$this->batch	= array();
-	}
-	
-	public function __destruct()
-	{
-		$this->close();
-	}
-	
 	public function close()
 	{
 		$this->db->close();
-	}
-	
-	public function query( $cql, array $params = array(), array $options = array() )
-	{
-		$statement	= $this->db->prepare( $cql );
-		
-		return $this->db->execute( $statement );
 	}
 	
 	public function schema()
@@ -85,8 +48,31 @@ class Adapter implements AdapterInterface
 	
 	public function queryBatch( $cql, array $params, $batch = self::DEFAULT_BATCH )
 	{
+		if ( $this->logger )
+		{
+			$this->_logQuery( $cql, $params );
+		}
+		
 		$statement	= $this->db->prepare( $cql );
 		
 		return $this->batch[$batch]->add( $statement, $params );
+	}
+	
+	///////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	protected function _init( array $config )
+	{
+		$cluster		= \Cassandra::cluster()	->withContactPoints( join( ',', $config['contact_points'] ) )
+												->withPort( $config['port'] )
+												->build();
+		
+		$this->db		= $cluster->connect( $config['keyspace'] );
+	}
+	
+	protected function _execute( $cql, array $params = array(), array $options = array() )
+	{
+		$statement	= $this->db->prepare( $cql );
+		
+		return $this->db->execute( $statement );
 	}
 }

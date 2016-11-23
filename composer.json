@@ -1,6 +1,6 @@
 {
-    "name": "vanko-soft/cassandra-dev",
-    
+    "name": "vanko-soft/alexandra-dev",
+    "license": "MIT",
     "authors": [
         {
             "name": "Ivan I. Atanasov",
@@ -11,9 +11,12 @@
     "minimum-stability": "dev",
     
     "require": {
-		"php": ">=5.5",
+		"php": ">=5.5.0",
 		"hassankhan/config": "~0.10",
-		"evseevnn/php-cassandra-binary": "dev-master"
+		"evseevnn/php-cassandra-binary": "dev-master",
+        "slim/slim": "^3.1",
+        "slim/php-view": "^2.0",
+        "monolog/monolog": "^1.17"
     },
     
     "autoload":
@@ -25,5 +28,22 @@
     		"VankoSoft\\Alexandra\\":	"library/VankoSoft/Alexandra/",
     		"VankoSoft\\AlexandraDev\\": "src/AlexandraDev/"
     	}
-    }
+    },
+    
+    "require-dev": {
+        "phpunit/phpunit": ">=4.8 < 6.0"
+    },
+    
+    "autoload-dev": 
+    {
+        "psr-4": 
+        {
+            "Tests\\": "tests/"
+        }
+    },
+    
+    "scripts": {
+        "start": "php -S 0.0.0.0:8080 -t public public/index.php",
+        "test": "phpunit"
+	}
 }

@@ -6,7 +6,6 @@ use Noodlehaus\Config as NoodlehausConfig;
 
 use VankoSoft\Alexandra\DBAL\Connection\Connection;
 use VankoSoft\Alexandra\ODM\UnitOfWork\UnitOfWork;
-use VankoSoft\Alexandra\DBAL\Driver\DataStax\Adapter as DbAdapter;
 use VankoSoft\Alexandra\ODM\Entity\Entity;
 use VankoSoft\Alexandra\ODM\Entity\EntitySupport;
 use VankoSoft\Alexandra\ODM\Hydrator\HydratorFactory;
@@ -50,7 +49,7 @@ class RepositoryContainer implements RepositoryContainerInterface
 	public function __construct( NoodlehausConfig $config )
 	{
 		$this->config		= $config;
-		$connection			= new Connection( $config->get( 'connection' ) );
+		$connection			= new Connection( $config->get( 'connection' ), $config->get( 'logger' ) );
 		
 		$this->db			= $connection->get( $config->get( 'preferences.connection' ) );
 		$this->uow			= new UnitOfWork();
@@ -78,7 +77,7 @@ class RepositoryContainer implements RepositoryContainerInterface
 															$this->db
 														);
 			$hydrator					= HydratorFactory::get(
-																$this->config->get( 'preferences.connection' ),
+																$this->db->driver(),
 																$this->config->get( 'schema.' . $table )
 															);
 			$entitySupport				= new EntitySupport( $tableGateway, $hydrator );

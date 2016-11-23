@@ -2,11 +2,12 @@
 
 namespace VankoSoft\Alexandra\ODM\UnitOfWork;
 
+use VankoSoft\Alexandra\ODM\Entity\Entity;
+use VankoSoft\Alexandra\ODM\Entity\EntitySupport;
+
 interface UnitOfWorkInterface
 {
-	public function addEntity( $entity, $state );
+	function schedule( Entity $entity, EntitySupport $es, $state );
 	
-	public function addEntities( $entity, $state );
-	
-	public function commit();
+	function commit();
 }

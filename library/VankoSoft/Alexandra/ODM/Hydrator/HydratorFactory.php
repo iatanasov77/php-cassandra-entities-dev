@@ -2,7 +2,7 @@
 
 namespace VankoSoft\Alexandra\ODM\Hydrator;
 
-use VankoSoft\Alexandra\DBAL\Connection\Driver;
+use VankoSoft\Alexandra\DBAL\Adapter\Driver;
 
 class HydratorFactory
 {
