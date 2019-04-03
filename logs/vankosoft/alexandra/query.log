@@ -1,1 +1,3 @@
 [2016-11-23 15:04:47] AlexandraQueryTrace.INFO: SELECT product_id, title, qty, price, categories FROM products [] []
+[2019-04-03 18:53:51] AlexandraQueryTrace.INFO: SELECT product_id, title, qty, price, categories FROM products [] []
+[2019-04-03 19:54:56] AlexandraQueryTrace.INFO: SELECT product_id, title, qty, price, categories FROM products [] []

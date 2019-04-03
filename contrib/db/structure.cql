@@ -16,6 +16,3 @@ CREATE TABLE categories (
   title		varchar,
   PRIMARY KEY ( category_id )
 );
-
-
-
