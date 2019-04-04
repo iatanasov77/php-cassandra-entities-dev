@@ -1,0 +1,3 @@
+[submodule "libraryVankoSoftAlexandra"]
+	path = libraryVankoSoftAlexandra
+	url = https://github.com/iatanasov77/php-cassandra-entities
