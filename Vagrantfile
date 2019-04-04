@@ -19,6 +19,17 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.network "private_network", ip: "10.3.3.3"
   config.vm.network "forwarded_port", guest: 80, host: 8080
   
+  #Hostmanager
+  config.hostmanager.enabled              = true
+  config.hostmanager.manage_host          = true
+  config.hostmanager.manage_guest         = false
+  config.hostmanager.ignore_private_ip    = false
+  config.hostmanager.include_offline      = true
+  config.hostmanager.aliases              = [
+      "cassandra.pcedev.lh www.cassandra.pcedev.lh",
+      "pcedev.lh www.pcedev.lh"
+  ]
+  
   # Run provision scripts
   config.vm.provision "shell", path: "Vagrant/provision/packages.sh"
   config.vm.provision "shell", path: "Vagrant/provision/settings.sh"
