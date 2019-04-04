@@ -1,3 +1,5 @@
 [2016-11-23 15:04:47] AlexandraErrorLog.INFO: SELECT product_id, title, qty, price, categories FROM products [] []
 [2019-04-03 18:53:51] AlexandraErrorLog.INFO: SELECT product_id, title, qty, price, categories FROM products [] []
 [2019-04-03 19:54:56] AlexandraErrorLog.INFO: SELECT product_id, title, qty, price, categories FROM products [] []
+[2019-04-04 13:17:42] AlexandraErrorLog.INFO: SELECT product_id, title, qty, price, categories FROM products [] []
+[2019-04-04 14:31:04] AlexandraErrorLog.INFO: SELECT product_id, title, qty, price, categories FROM products [] []

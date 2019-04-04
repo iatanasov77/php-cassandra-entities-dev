@@ -6,4 +6,4 @@
 /composer.lock
 /.vagrant/
 /webroot/cassandra.log
-
+/home/vagrant/www/CassandraClusterAdmin/*
