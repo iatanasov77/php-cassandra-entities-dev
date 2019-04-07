@@ -1,1 +1,1 @@
-{"VankoSoft\\AlexandraDev\\Model\\Entity\\Product":{"table":"products","columns":{"product_id":"int","categories":"set","price":"float","qty":"int","title":"varchar"}},"VankoSoft\\AlexandraDev\\Model\\Entity\\TestUuid":{"table":"test_uuid","columns":{"uid":"uuid","name":"varchar"}}}
+{"VankoSoft\\AlexandraDev\\Model\\Entity\\Product":{"table":"products","columns":{"product_id":"int","category":"uuid","price":"float","qty":"int","title":"varchar"}},"VankoSoft\\AlexandraDev\\Model\\Entity\\TestUuid":{"table":"test_uuid","columns":{"uid":"uuid","name":"varchar"}}}
