@@ -19,6 +19,7 @@ use Slim\App as SlimApp;
 use Noodlehaus\Config as NoodlehausConfig;
 
 use VankoSoft\Common\Application\Location;
+use VankoSoft\Alexandra\DBAL\Adapter\Driver\DataStax\Schema;
 
 session_start();
 
