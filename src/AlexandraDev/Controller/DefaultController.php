@@ -23,20 +23,23 @@ class DefaultController
 		
 		echo "<pre>"; var_dump($products);
 		
-// 		$newProduct   = new Product();
-// 		$newProduct->title = 'New Product';
-// 		$newProduct->qty = 5;
-// 		$newProduct->price = 2.0;
+		$newProduct   = new Product();
+		$newProduct->productId    = 1;
+		$uuid                     = new \Cassandra\UUID();
+		$newProduct->category     = $uuid->uuid();
+		$newProduct->title        = 'New Product';
+		$newProduct->qty          = 5;
+		$newProduct->price        = 2.0;
 
-// 		$repo->save( $newProduct );
-// 		$manager->commit();
-		
-		$testUuid         = new TestUuid();
-		$uuid             = new \Cassandra\UUID();
-		$testUuid->uid   = $uuid->uuid();
-		$testUuid->name   = 'Test 1';
-		$testRepo         = $manager->get( TestUuid::class );
-		$testRepo->save( $testUuid );
+		$repo->save( $newProduct );
 		$manager->commit();
+		
+// 		$testUuid         = new TestUuid();
+// 		$uuid             = new \Cassandra\UUID();
+// 		$testUuid->uid   = $uuid->uuid();
+// 		$testUuid->name   = 'Test 1';
+// 		$testRepo         = $manager->get( TestUuid::class );
+// 		$testRepo->save( $testUuid );
+// 		$manager->commit();
 	}
 }

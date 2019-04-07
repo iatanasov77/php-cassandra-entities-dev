@@ -7,7 +7,7 @@ CREATE TABLE products (
   title 	varchar,
   qty   	int,
   price		float,
-  categories	set< int >,
+  category	uuid,
   PRIMARY KEY ( product_id )
 );
 

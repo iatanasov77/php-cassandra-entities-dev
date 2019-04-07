@@ -14,5 +14,5 @@ class Product extends Entity
 	
 	public $price;
 	
-	public $categories;
+	public $category;
 }
